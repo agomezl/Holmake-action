@@ -19,37 +19,34 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: "Install dependencies"
-      shell: bash
+    - shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install git build-essential
-    - name: "Fetch polyml"
-      id: poly-pull
+    - id: poly-pull
       uses: actions/checkout@v2
       with:
         repository: polyml/polyml
         ref: ${{ inputs.polyml-version }}
         path: polyml
+      shell: bash
       run: echo "::set-output name=hash::$(git show-ref --hash HEAD)"
-    - name: "Build polyml"
-      working-directory: polyml
+    - working-directory: polyml
       shell: bash
       run: |
         configure --prefix=`pwd`
         make
         make compiler
         make install
-    - name: "Fetch HOL"
-      id: hol-pull
+    - id: hol-pull
       uses: actions/checkout@v2
       with:
         repository: polyml/polyml
         ref: ${{ inputs.hol-branch }}
         path: HOL
+      shell : bash
       run: echo "::set-output name=hash::$(git show-ref --hash HEAD)"
-    - name: "Builds HOL"
-      working-directory: polyml
+    - working-directory: polyml
       shell: bash
       run: |
         echo BUILDS_HOL
